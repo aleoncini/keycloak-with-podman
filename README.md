@@ -117,7 +117,7 @@ ed eseguite:
 
 > podman run -d --rm --net rhbk-network -p 8080:80 kc-nginx
 
-Se adesso accedete dal browser alla pagina http://localhost:8080 sarete in realtà connessi con uno dei due server Keycloak. BUon lavoro!!
+Se adesso accedete dal browser alla pagina http://localhost:8080 sarete in realtà connessi con uno dei due server Keycloak. Buon lavoro!!
 
 
 
