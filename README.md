@@ -17,7 +17,10 @@ clonate il repo ed utilizzate *podman compose*:
 > 
 > podman compose up -d
 
-Per stoppare l'ambiente e rimuovere tutti i container:
+Accedi con il browser alla console di Keycloak [localhost:8080](http://localhost:8080)
+Puoi anche accedere all'amministrazione di Postgres [localhost:8088](http://localhost:8088)
+
+Se vuoi stoppare l'ambiente e rimuovere tutti i container:
 
 > podman compose down
 
