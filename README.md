@@ -25,6 +25,12 @@ Se vuoi stoppare l'ambiente e rimuovere tutti i container:
 
 > podman compose down
 
+### TIP - rootless mode
+
+Se dovessi incontrare degli errori potrebbe essere necessario abilitare l'accesso al socket da systemd:
+
+> sudo systemctl enable --now podman.service
+
 ## manually run each single container
 
 Prima di tutto ci serve creare una rete interna, i due nodi di Keycloak infatti condividono le sessioni web attraverso un cluster Infinispan che si forma automaticamente mediante un sistema di auto-discovery che cerca tutti i nodi in esecuzione sulla stessa rete. Inoltre entrambi i nodi devono dialogare con il DB Postgres che contiene le configurazioni di Keycloak.
