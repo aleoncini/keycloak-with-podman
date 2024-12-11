@@ -1,0 +1,59 @@
+services:
+  pgadmin:
+    image: docker.io/dpage/pgadmin4:latest
+    ports:
+      - '8088:80'
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=dbuser@example.com
+      - PGADMIN_DEFAULT_PASSWORD=change_me
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: docker.io/library/postgres:latest
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=change_me
+      - POSTGRES_DB=keycloakDB
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data:Z
+
+  kc:
+    build: kc
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - KC_HTTP_ENABLED=true
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=change_me
+    command: 'start --optimized --hostname=http://localhost:8080'
+  second-kc:
+    image: localhost/keycloak-with-podman_kc:latest
+    depends_on:
+      kc:
+        condition: service_healthy
+    environment:
+      - KC_HTTP_ENABLED=true
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=change_me
+    command: 'start --optimized --hostname=http://localhost:8080'
+
+  lb:
+    image: nginx:latest
+    volumes:
+      - type: bind
+        source: ./lb/nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+    ports:
+      - 8080:80
+    depends_on:
+      - second-kc
+
+volumes:
+  pgdata:
+    driver: local

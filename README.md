@@ -7,7 +7,21 @@ L'istanza singola tuttavia non permette di eseguire certi tipi di test, per esem
 
 Anche in questo caso Podman ci può aiutare permettendo l'installazione di un ambiente più sofisticato e più simile ad una configurazione di produzione. Di seguito ecco alcuni semplici comandi che ci permetteranno di eseguire in locale un cluster di due (o più) nodi di Keycloak in alta affidabilità con persistenza su un databse PostgresQL.
 
-## Deploy
+## TL;DR
+
+clonate il repo ed utilizzate *podman compose*:
+
+> git clone https://github.com/aleoncini/keycloak-with-podman.git
+> 
+> cd keycloak-with-podman
+> 
+> podman compose up -d
+
+Per stoppare l'ambiente e rimuovere tutti i container:
+
+> podman compose down
+
+## manually run each single container
 
 Prima di tutto ci serve creare una rete interna, i due nodi di Keycloak infatti condividono le sessioni web attraverso un cluster Infinispan che si forma automaticamente mediante un sistema di auto-discovery che cerca tutti i nodi in esecuzione sulla stessa rete. Inoltre entrambi i nodi devono dialogare con il DB Postgres che contiene le configurazioni di Keycloak.
 
