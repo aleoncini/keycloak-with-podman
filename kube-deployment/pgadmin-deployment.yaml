@@ -1,24 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+  namespace: sso
+  labels:
+    app: pgadmin
+spec:
+  ports:
+  - port: 8088
+    targetPort: 80
+    name: pgadmin
+  selector:
+    app: pgadmin
+  type: ClusterIP
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.35.0 (HEAD)
-  labels:
-    io.kompose.service: pgadmin
   name: pgadmin
+  namespace: sso
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: pgadmin
+      app: pgadmin
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.35.0 (HEAD)
       labels:
-        io.kompose.service: pgadmin
+        app: pgadmin
     spec:
       containers:
         - env:

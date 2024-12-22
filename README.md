@@ -143,6 +143,40 @@ ed eseguite:
 
 Se adesso accedete dal browser alla pagina http://localhost:8080 sarete in realtà connessi con uno dei due server Keycloak. Buon lavoro!!
 
+## Deploy su Kubernetes
+
+**[NOTA:]** per ambienti di produzione, anche se di fatto potremmo utilizzare la stessa procedura, in realtà le installazioni o, se vogliamo, i deploy vengono effettuati tramite operator. La procedura qui descritta è un riferimento utile solo per ambienti locali, definiamoli "workstation di sviluppo".
+
+Ci sono diversi ambienti di tipo "Local Kubernetes" come per esempio minikube, k3s e k3d, Kind ha la caratteristica di essere piuttosto leggero e, personalmente, è quello che preferisco ed è quello che ho utilizzato per questo laboratorio.
+
+Per prima cosa aggiungo un namespace in modo da raggruppare le varie componenti necessarie per il deploy:
+
+> kubectl create namespace sso
+
+Adesso potremo aggiungere le componenti che servono al nostro deploy utilizzando alcuni file YAML
+
+Per prima cosa aggiungo alcuni secrets che saranno poi utilizzati dai vari server (Keycloak e PostgresQL).
+
+> kubectl apply -f secrets.yaml -n sso
+
+non fate caso al warning che vedrete in merito alla mancanza dei dati di tipo PEM, infatti se controllate
+
+> kubectl get secrets -n sso
+
+vedrete che sono stati creati 3 secrets differenti.
+
+Per quanto riguarda postgres, in analogia con quanto già fatto creando direttamente i container tramite podman, dobbiamo prima definire un'area storage per dare persistenza al database:
+
+> kubectl apply -f pg-storage.yaml -n sso
+
+il file definisce sia un PeristentVolume che il relativo PersistentVolumeClaim.
+
+A questo punto possiamo deployare postgres
+
+> kubectl apply -f pg-deployment.yaml -n sso
+
+Per quanto riguarda Il database su cui Keycloak registra tutta la configurazione il setup è pronto, possiamo finalmente deployare anche Keycloak.
+
 
 
 

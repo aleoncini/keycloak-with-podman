@@ -18,7 +18,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
-  namespace: hbr-keycloak
+  namespace: sso
 spec:
   selector:
     matchLabels:
@@ -35,14 +35,14 @@ spec:
         name: postgres
         envFrom:
           - secretRef:
-              name: postgres-credentials
+              name: pg-secrets
         ports:
         - containerPort: 5432
           name: postgres
         securityContext:
           privileged: false
         volumeMounts:
-        - name: postgres-storage
+        - name: pgdata
           mountPath: /var/lib/postgresql/data
         resources:
             limits:
@@ -52,6 +52,6 @@ spec:
               memory: 256Mi
               cpu: "0.2"
       volumes:
-      - name: postgres-storage
+      - name: pgdata
         persistentVolumeClaim:
           claimName: postgres-pvc
