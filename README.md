@@ -143,11 +143,11 @@ ed eseguite:
 
 Se adesso accedete dal browser alla pagina http://localhost:8080 sarete in realtà connessi con uno dei due server Keycloak. Buon lavoro!!
 
-## Deploy su Kubernetes
+## Deploy locale utilizzando Kind
 
-**[NOTA:]** per ambienti di produzione, anche se di fatto potremmo utilizzare la stessa procedura, in realtà le installazioni o, se vogliamo, i deploy vengono effettuati tramite operator. La procedura qui descritta è un riferimento utile solo per ambienti locali, definiamoli "workstation di sviluppo".
+**[NOTA:]** I file qui utilizzati come esempio per un laboratorio locale potrebbero essere utilizzati anche su ambienti evoluti come [Red Hat Openshift](https://www.redhat.com/en/technologies/cloud-computing/openshift), per questo tipo di ambienti però è consigliabile l'uso dell'[operator](https://operatorhub.io/operator/keycloak-operator). La procedura qui descritta è un riferimento utile solo per ambienti locali di sviluppo.
 
-Ci sono diversi ambienti di tipo "Local Kubernetes" come per esempio minikube, k3s e k3d, Kind ha la caratteristica di essere piuttosto leggero e, personalmente, è quello che preferisco ed è quello che ho utilizzato per questo laboratorio.
+Ci sono diversi ambienti di tipo "Local Kubernetes" come per esempio minikube, k3s e k3d. Kind ha la caratteristica di essere piuttosto leggero e, personalmente, è quello che preferisco ed è quello che ho utilizzato per questo laboratorio.
 
 Per prima cosa aggiungo un namespace in modo da raggruppare le varie componenti necessarie per il deploy:
 
@@ -175,10 +175,31 @@ A questo punto possiamo deployare postgres
 
 > kubectl apply -f pg-deployment.yaml -n sso
 
-Per quanto riguarda Il database su cui Keycloak registra tutta la configurazione il setup è pronto, possiamo finalmente deployare anche Keycloak.
+**[Opzionale]** Come per l'esempio del Composer potreste voler utilizzare la console di amministrazione del database, troverete un file YAML che crea un pod con l'applicazione *PGADMIN* ed il relativo servizio. Se volete provare a collegarvi dovete a questo punto attivare il portforwarding del servizio creato
 
+> kubectl get svc -n sso
 
+verificate che ci sia una riga del tipo:
 
+> pgadmin    ClusterIP      10.96.106.117   <none>        8088/TCP         51m
+
+ed eseguite il comando
+
+> kubectl -n sso port-forward service/pgadmin 8880:8080
+
+Per accedere aprite una pagina del vostro browser su [localhost:8080](http://localhost:8080) ed utilizzate le credenziali: **dbuser@example.com/change_me**
+
+Se tutto ha funzionato vi troverete all'interno della console web di Postgres, aggiungete un server di riferimento che potrete chiamare keycloak (parametri di riferimento: host=postgres, user=dbuser, password=change_me).
+
+Non resta che deployare Keycloak, fermate (Ctrl-C) il portforwarding ed eseguite
+
+> kubectl apply -f kc-deployment.yaml
+
+anche in questo caso per accedere alla console occorre riattivare il corrispondente portforwarding con 
+
+> kubectl -n sso port-forward service/keycloak 8080:8080
+
+e sempre tramite il vostro browser accedete a [localhost:8080](http://localhost:8080) ed utilizzate le credenziali: **admin/change_me**
 
 
 
