@@ -57,6 +57,7 @@ services:
 
   lb:
     image: nginx:latest
+    container_name: lb
     volumes:
       - type: bind
         source: ./lb/nginx.conf
