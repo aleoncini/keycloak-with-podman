@@ -15,62 +15,36 @@ remote: Total 86 (delta 34), reused 74 (delta 25), pack-reused 0 (from 0)
 Receiving objects: 100% (86/86), 24.09 KiB | 6.02 MiB/s, done.
 Resolving deltas: 100% (34/34), done.
 $ cd keycloak-with-podman
-
-
-docker compose up -d
-Creating network "nginx-golang-mysql_default" with the default driver
-Building backend
-Step 1/8 : FROM golang:1.13-alpine AS build
-1.13-alpine: Pulling from library/golang
-...
-Successfully built 5f7c899f9b49
-Successfully tagged nginx-golang-mysql_proxy:latest
-WARNING: Image for service proxy was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
-Creating nginx-golang-mysql_db_1 ... done
-Creating nginx-golang-mysql_backend_1 ... done
-Creating nginx-golang-mysql_proxy_1   ... done
-```
-
-
-
-```shell
 $ docker compose up -d
-Creating network "nginx-golang-mysql_default" with the default driver
-Building backend
-Step 1/8 : FROM golang:1.13-alpine AS build
-1.13-alpine: Pulling from library/golang
-...
-Successfully built 5f7c899f9b49
-Successfully tagged nginx-golang-mysql_proxy:latest
-WARNING: Image for service proxy was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
-Creating nginx-golang-mysql_db_1 ... done
-Creating nginx-golang-mysql_backend_1 ... done
-Creating nginx-golang-mysql_proxy_1   ... done
+97feb7c6973da609ca1e4c45a6eaa890aee9cbd2504f23053131a3a5f2fc5460
+dbf8949840c5dab4d92dcb5423998b8d7cc01f769ee97bfe9a1cec3fbf17d870
+489fdd64aae645b87087c2bba7de067017cbe5626d6c22fbddf4dbde03e3d606
+d2dffbc137b86314fd4f23206f0e1dd1f7609dc18f135206d680ea534640f175
+b0aad119a74f6266e774c91e9b796ad090409bfaa73fc3092a3dcd6b2a73b4ae
+2616d63a1feb0a54c6c72299e102e2a058e6959589cf58ae1574da57e8c6020f
+$
 ```
 
+Accedete con il browser alla console di Keycloak [localhost:8080](http://localhost:8080)
 
+Volendo si puo' anche accedere all'amministrazione di Postgres [localhost:8088](http://localhost:8088)
 
-clonate il repo ed utilizzate *podman compose*:
+Per fermare l'ambiente e rimuovere tutti i container creati
 
-> git clone https://github.com/aleoncini/keycloak-with-podman.git
-> 
-> cd keycloak-with-podman
-> 
-> podman compose up -d
-
-Accedi con il browser alla console di Keycloak [localhost:8080](http://localhost:8080)
-
-Puoi anche accedere all'amministrazione di Postgres [localhost:8088](http://localhost:8088)
-
-Stop and remove the containers
 ```shell
 $ docker compose down
 ```
+> ℹ️ **_INFO_**  
+> Se dovessi incontrare degli errori con Podman potrebbe essere necessario abilitare l'accesso al socket da systemd:  
+> 
+```shell
+$ sudo systemctl enable --now podman.service
+```
+## Deploy di un cluster Keycloak 
 
-Se vuoi stoppare l'ambiente e rimuovere tutti i container:
+Può essere utile in un ambiente di sviluppo istanziare un server Keycloak per per gestire il controllo degli accessi a servizi applicativi. Ci sono vari modi per farlo, installandolo sulla propria workstation o utilizzando un container e sicuramente tool come Podman o Docker ci tornano utili e di fatto con un singolo comando abbiamo la possibilità di avere un server Keycloak pronto all'uso.
 
-> podman compose down
-
+L'istanza singola tuttavia non permette di eseguire certi tipi di test, per esempio di alta affidabilità, o analizzare comportamenti con configurazioni diciamo "simil produzione". Anche in questo caso Podman ci può aiutare permettendo l'installazione di un ambiente più sofisticato e più simile ad una configurazione di produzione. In questo laboratorio anziche' il singolo nodo di Keycloak istanzieremo un cluster di 2 (o piu') nodi in alta affidabiltà con persistenza su un database Postgres. Proveremo anche diverse modalità di esecuzione, a partire dalla creazione dei singoli container, passando per Podman Compose (la modalità sopra descritta), per arrivare ad una modalità *"Kubernetes"* tramite **Kind**.
 
 Project structure:
 ```
@@ -91,59 +65,6 @@ Project structure:
 ├── compose.yaml
 └── README.md
 ```
-
-In un ambiente di sviluppo è molto facile istanziare un server Keycloak, lo si può scaricare ed eseguire in locale sulla propria workstation, o, ancora più semplicemente, se si ha a disposizione podman, si può eseguire una immagine ufficiale di Keycloak. Quindi di fatto serve un solo comando per avere Keycloak up & running sul proprio PC.
-
-L'istanza singola tuttavia non permette di eseguire certi tipi di test, per esempio di alta affidabilità, o analizzare comportamenti con configurazioni diciamo "simil produzione".
-
-Anche in questo caso Podman ci può aiutare permettendo l'installazione di un ambiente più sofisticato e più simile ad una configurazione di produzione. Di seguito ecco alcuni semplici comandi che ci permetteranno di eseguire in locale un cluster di due (o più) nodi di Keycloak in alta affidabilità con persistenza su un databse PostgresQL.
-
-## TL;DR
-
-
-```shell
-$ docker compose up -d
-Creating network "nginx-golang-mysql_default" with the default driver
-Building backend
-Step 1/8 : FROM golang:1.13-alpine AS build
-1.13-alpine: Pulling from library/golang
-...
-Successfully built 5f7c899f9b49
-Successfully tagged nginx-golang-mysql_proxy:latest
-WARNING: Image for service proxy was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
-Creating nginx-golang-mysql_db_1 ... done
-Creating nginx-golang-mysql_backend_1 ... done
-Creating nginx-golang-mysql_proxy_1   ... done
-```
-
-
-
-clonate il repo ed utilizzate *podman compose*:
-
-> git clone https://github.com/aleoncini/keycloak-with-podman.git
-> 
-> cd keycloak-with-podman
-> 
-> podman compose up -d
-
-Accedi con il browser alla console di Keycloak [localhost:8080](http://localhost:8080)
-
-Puoi anche accedere all'amministrazione di Postgres [localhost:8088](http://localhost:8088)
-
-Stop and remove the containers
-```shell
-$ docker compose down
-```
-
-Se vuoi stoppare l'ambiente e rimuovere tutti i container:
-
-> podman compose down
-
-### TIP: rootless mode
-
-Se dovessi incontrare degli errori potrebbe essere necessario abilitare l'accesso al socket da systemd:
-
-> sudo systemctl enable --now podman.service
 
 ## manually run each single container
 

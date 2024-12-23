@@ -1,6 +1,7 @@
 services:
   pgadmin:
     image: docker.io/dpage/pgadmin4:latest
+    container_name: pgadmin
     ports:
       - '8088:80'
     environment:
