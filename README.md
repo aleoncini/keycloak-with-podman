@@ -202,7 +202,7 @@ I nodi keycloak lanciati in questo modo non sono raggiungibili direttamente usan
 $ podman network inspect kc-network
 ```
 
-prendete nota del parametro **ipnet** in quanto lo dovrete inserire nella configurazione del file *nginx.conf* allegata. Dopo aver sistemato la configurazione buildate la vostra immagine nginx (In alternativa potete asseganre dei nomi ai container ed utilizzarlo come hostname, io ho usato kc-1 e kc-2)
+prendete nota del parametro **ipnet** in quanto lo dovrete inserire nella configurazione del file *nginx.conf* allegata. Dopo aver sistemato la configurazione buildate la vostra immagine nginx (In alternativa potete assegnare dei nomi ai container ed utilizzarlo come hostname, io ho usato kc-1 e kc-2)
 
 ```shell
 $ podman build -t kc-nginx . -f nginx-dockerfile
@@ -211,7 +211,7 @@ $ podman build -t kc-nginx . -f nginx-dockerfile
 ed eseguite:
 
 ```shell
-$ podman run -d --rm --net rhbk-network -p 8080:80 kc-nginx
+$ podman run -d --rm --net kc-network -p 8080:80 kc-nginx
 ```
 
 Se adesso accedete dal browser alla pagina http://localhost:8080 sarete in realtà connessi con uno dei due server Keycloak. Buon lavoro!!
