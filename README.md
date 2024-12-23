@@ -1,13 +1,54 @@
-# Keycloak with Podman
-Pochi semplici comandi per eseguire 2 (o N) istanze di Keycloak ed un database PostgresQL.
-
-In un ambiente di sviluppo è molto facile istanziare un server Keycloak, lo si può scaricare ed eseguire in locale sulla propria workstation, o, ancora più semplicemente, se si ha a disposizione podman, si può eseguire una immagine ufficiale di Keycloak. Quindi di fatto serve un solo comando per avere Keycloak up & running sul proprio PC.
-
-L'istanza singola tuttavia non permette di eseguire certi tipi di test, per esempio di alta affidabilità, o analizzare comportamenti con configurazioni diciamo "simil produzione".
-
-Anche in questo caso Podman ci può aiutare permettendo l'installazione di un ambiente più sofisticato e più simile ad una configurazione di produzione. Di seguito ecco alcuni semplici comandi che ci permetteranno di eseguire in locale un cluster di due (o più) nodi di Keycloak in alta affidabilità con persistenza su un databse PostgresQL.
+# Keycloak with Podman (e Kind)
+### Pochi semplici comandi per eseguire 2 (o N) istanze di Keycloak ed un database PostgresQL.
 
 ## TL;DR
+
+clonate il repo GIT e fate partire l'ambiente usando *podman compose*:
+
+```shell
+$ git clone https://github.com/aleoncini/keycloak-with-podman.git
+Cloning into 'keycloak-with-podman'...
+remote: Enumerating objects: 86, done.
+remote: Counting objects: 100% (86/86), done.
+remote: Compressing objects: 100% (53/53), done.
+remote: Total 86 (delta 34), reused 74 (delta 25), pack-reused 0 (from 0)
+Receiving objects: 100% (86/86), 24.09 KiB | 6.02 MiB/s, done.
+Resolving deltas: 100% (34/34), done.
+$ cd keycloak-with-podman
+
+
+docker compose up -d
+Creating network "nginx-golang-mysql_default" with the default driver
+Building backend
+Step 1/8 : FROM golang:1.13-alpine AS build
+1.13-alpine: Pulling from library/golang
+...
+Successfully built 5f7c899f9b49
+Successfully tagged nginx-golang-mysql_proxy:latest
+WARNING: Image for service proxy was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Creating nginx-golang-mysql_db_1 ... done
+Creating nginx-golang-mysql_backend_1 ... done
+Creating nginx-golang-mysql_proxy_1   ... done
+```
+
+
+
+```shell
+$ docker compose up -d
+Creating network "nginx-golang-mysql_default" with the default driver
+Building backend
+Step 1/8 : FROM golang:1.13-alpine AS build
+1.13-alpine: Pulling from library/golang
+...
+Successfully built 5f7c899f9b49
+Successfully tagged nginx-golang-mysql_proxy:latest
+WARNING: Image for service proxy was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Creating nginx-golang-mysql_db_1 ... done
+Creating nginx-golang-mysql_backend_1 ... done
+Creating nginx-golang-mysql_proxy_1   ... done
+```
+
+
 
 clonate il repo ed utilizzate *podman compose*:
 
@@ -20,6 +61,79 @@ clonate il repo ed utilizzate *podman compose*:
 Accedi con il browser alla console di Keycloak [localhost:8080](http://localhost:8080)
 
 Puoi anche accedere all'amministrazione di Postgres [localhost:8088](http://localhost:8088)
+
+Stop and remove the containers
+```shell
+$ docker compose down
+```
+
+Se vuoi stoppare l'ambiente e rimuovere tutti i container:
+
+> podman compose down
+
+
+Project structure:
+```
+.
+├── kc
+│   └── Dockerfile
+├── lb
+│   └── nginx.conf
+├── kube-deployment
+│   ├── ingress.yaml
+│   ├── kc-deployment.yaml
+│   ├── pg-deployment.yaml
+│   ├── pg-storage.yaml
+│   ├── pgadmin-deployment.yaml
+│   ├── secrets.yaml
+│   ├── tls.crt
+│   └── tls.key
+├── compose.yaml
+└── README.md
+```
+
+In un ambiente di sviluppo è molto facile istanziare un server Keycloak, lo si può scaricare ed eseguire in locale sulla propria workstation, o, ancora più semplicemente, se si ha a disposizione podman, si può eseguire una immagine ufficiale di Keycloak. Quindi di fatto serve un solo comando per avere Keycloak up & running sul proprio PC.
+
+L'istanza singola tuttavia non permette di eseguire certi tipi di test, per esempio di alta affidabilità, o analizzare comportamenti con configurazioni diciamo "simil produzione".
+
+Anche in questo caso Podman ci può aiutare permettendo l'installazione di un ambiente più sofisticato e più simile ad una configurazione di produzione. Di seguito ecco alcuni semplici comandi che ci permetteranno di eseguire in locale un cluster di due (o più) nodi di Keycloak in alta affidabilità con persistenza su un databse PostgresQL.
+
+## TL;DR
+
+
+```shell
+$ docker compose up -d
+Creating network "nginx-golang-mysql_default" with the default driver
+Building backend
+Step 1/8 : FROM golang:1.13-alpine AS build
+1.13-alpine: Pulling from library/golang
+...
+Successfully built 5f7c899f9b49
+Successfully tagged nginx-golang-mysql_proxy:latest
+WARNING: Image for service proxy was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Creating nginx-golang-mysql_db_1 ... done
+Creating nginx-golang-mysql_backend_1 ... done
+Creating nginx-golang-mysql_proxy_1   ... done
+```
+
+
+
+clonate il repo ed utilizzate *podman compose*:
+
+> git clone https://github.com/aleoncini/keycloak-with-podman.git
+> 
+> cd keycloak-with-podman
+> 
+> podman compose up -d
+
+Accedi con il browser alla console di Keycloak [localhost:8080](http://localhost:8080)
+
+Puoi anche accedere all'amministrazione di Postgres [localhost:8088](http://localhost:8088)
+
+Stop and remove the containers
+```shell
+$ docker compose down
+```
 
 Se vuoi stoppare l'ambiente e rimuovere tutti i container:
 
@@ -71,6 +185,13 @@ a questo punto possiamo eseguire il database, usate:
 > podman run -d --name pgsql --net kc-network -p 5432:5432 -v pgdata:/var/lib/postresql/data -e POSTGRES_USER=dbuser -e POSTGRES_PASSWORD=change_me -e POSTGRES_DB=keycloakDB postgres
 
 **\[NOTA\]** Potreste anche tralasciare di creare un volume e quindi anche eliminare l'opzione **-V** nel comando precedente, ricordatevi però che in quel caso se fermate il pod che contiene il DB e poi lo eseguite di nuovo perderete le configurazioni salvate nella sessione precedente (che potrebbe anche essere un caso d'uso voluto).
+
+> ℹ️ **_INFO_**  
+> For compatibility purpose between `AMD64` and `ARM64` architecture, we use a MariaDB as database instead of MySQL.  
+> You still can use the MySQL image by uncommenting the following line in the Compose file   
+> `#image: mysql:8`
+
+
 
 Sempre al fine di controllare che tutto stia funzionando correttamente potreste usare il comando: 
 
