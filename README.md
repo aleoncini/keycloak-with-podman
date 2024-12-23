@@ -72,14 +72,25 @@ Prima di tutto ci serve creare una rete interna, i due nodi di Keycloak infatti 
 
 cominciamo quindi con il comando:
 
-> podman network create kc-network
+```shell
+$ podman network create kc-network
+```
 
 Naturalmente potete chiamare la rete come meglio credete.
 Provate ad eseguire il comando
 
-> podman network ls
+> 
+```shell
+$ podman network ls
+```
 
 dovreste avre un output del tipo:
+
+```shell
+$ NETWORK ID    NAME          DRIVER
+$ 2f259bab93aa  podman        bridge
+$ 6a5df8616cf3  kc-network    bridge
+```
 
 > NETWORK ID    NAME          DRIVER
 >
