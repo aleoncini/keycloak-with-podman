@@ -303,10 +303,10 @@ pgadmin    ClusterIP      10.96.106.117   <none>        8088/TCP         51m
 ed eseguite il comando
 
 ```shell
-kubectl -n sso port-forward service/pgadmin 8880:8080
+kubectl -n sso port-forward service/pgadmin 8082:8080
 ```
 
-Per accedere aprite una pagina del vostro browser su [localhost:8080](http://localhost:8080) ed utilizzate le credenziali: **dbuser@example.com/change_me**
+Per accedere aprite una pagina del vostro browser su [localhost:8082](http://localhost:8082) ed utilizzate le credenziali: **dbuser@example.com/change_me**
 
 Se tutto ha funzionato vi troverete all'interno della console web di Postgres, aggiungete un server di riferimento che potrete chiamare keycloak (parametri di riferimento: host=postgres, user=dbuser, password=change_me).
 
