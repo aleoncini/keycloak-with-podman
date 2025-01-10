@@ -148,7 +148,7 @@ podman pull docker.io/dpage/pgadmin4:latest
 ```
 
 ```shell
-podman run -d --name pgadmin -p 8082:80 --net kc-network -e PGADMIN_DEFAULT_EMAIL="dbuser@example.com" -e PGADMIN_DEFAULT_PASSWORD="change_me" pgadmin4
+podman run -d --rm --name pgadmin -p 8082:80 --net kc-network -e PGADMIN_DEFAULT_EMAIL="dbuser@example.com" -e PGADMIN_DEFAULT_PASSWORD="change_me" pgadmin4
 ```
 
 Potete adesso usare la web console di Postgres usando il browser ed aprendo la pagina [localhost:8082](http://localhost:8082)
