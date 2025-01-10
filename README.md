@@ -171,7 +171,7 @@ Per questo esempio io ho allegato un *Dockerfile* con cui specifico alcuni dei p
 
 > ***NOTA:*** La strategia qui può essere di vario tipo, per esempio specificando le variabili da riga di comando. Il compose proposto aggiunge queste informazioni
 > tramite variabili di ambiente. In questo esempio, avendo deciso di buildare l'immagine di keycloak
-> di riferimento potrebbe essere consigliabile aggiungerle in fase di build. Se decidete di fare in questo modo ***dovete togliere i commenti nel Dockerfile*** ed inserire l'indirizzo IP del DB che potete ricavare dal comando *podman network inspect kc-network*.
+> di riferimento potrebbe essere consigliabile aggiungerle in fase di build. Se decidete di fare in questo modo **dovete togliere i commenti nel Dockerfile** ed inserire l'indirizzo IP del DB che potete ricavare dal comando *podman network inspect kc-network*.
 
 ```shell
 cd kc
@@ -187,7 +187,11 @@ Ora tutto è pronto per lanciare le due (o più) istanze di Keycloak:
 podman run -d --rm --net kc-network -p 8443:8443 -p 9000:9000 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=change_me kc start --optimized --hostname=localhost
 ```
 
-Per la seconda istanza (o successive) non dovete far altro che ripetere il comando precedente.
+Per la seconda istanza (o successive) non dovete far altro che ripetere il comando precedente facendo attenzione a cambiare le porte di riferimento
+
+```shell
+podman run -d --rm --net kc-network -p 8543:8443 -p 9100:9000 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=change_me kc start --optimized --hostname=localhost
+```
 
 ## \[Opzionale\] Aggiungiamo un bilanciatore nell'architettura
 
