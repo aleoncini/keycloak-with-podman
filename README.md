@@ -193,6 +193,9 @@ Per la seconda istanza (o successive) non dovete far altro che ripetere il coman
 podman run -d --rm --net kc-network -p 8543:8443 -p 9100:9000 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=change_me kc start --optimized --hostname=localhost
 ```
 
+Potete adesso accedere alla web console di keycloak usando il browser ed aprendo la pagina su [localhost:8443](https://localhost:8443)
+oppure [localhost:8543](https://localhost:8543)
+
 ## \[Opzionale\] Aggiungiamo un bilanciatore nell'architettura
 
 Le ultime versioni di Keycloak sono state progettate ed implementate con lo specifico scopo di essere eseguite in un ambiente Cloud Oriented o Cloud Compliant, in particolare la progettazione del runtime, basato su Quarkus, trova la sua collocazione ideale sulla piattaforma Red Hat Openshift. Su Openshift è possibile utilizzare Keycloak in modalità **auto-scaling** che permette di aggiungere automaticamente dei pod in base al carico di lavoro che insiste sulla componente Keycloak. In questo contesto l'accesso alle istanze (quindi il bilanciamento delle richieste sui nodi che compongono il cluster Keycloak) è regolato da appositi meccanismi di routing messi a disposizione da Openshift. Se nel nostro ambientino di sviluppo locale volessimo aggiungere anche una componente che simula questa funzionalità (per esempio per testare il meccanismo di bilanciamento e le politiche appropriate) occorre aggiungere un ulteriore pod che si occupi di bilanciare le richieste al nostro mini-cluster Keycloak. Per questo esempio useremo un bilanciatore software sfruttando le funzionalità offerte da NGINX.
