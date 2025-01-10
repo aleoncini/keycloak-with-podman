@@ -25,6 +25,7 @@ services:
 
   kc:
     build: kc
+    image: localhost/kc
     container_name: kc-1
     depends_on:
       db:
@@ -40,7 +41,7 @@ services:
       - KC_HOSTNAME=pg-for-keycloak
     command: 'start --optimized --hostname=http://localhost:8080'
   second-kc:
-    image: localhost/keycloak-with-podman_kc:latest
+    image: localhost/kc:latest
     container_name: kc-2
     depends_on:
       kc:
