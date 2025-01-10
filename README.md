@@ -226,7 +226,7 @@ I nodi keycloak lanciati in questo modo non sono raggiungibili direttamente usan
 podman network inspect kc-network
 ```
 
-prendete nota del parametro **ipnet** in quanto lo dovrete inserire nella configurazione del file *nginx.conf* allegata. Dopo aver sistemato la configurazione buildate la vostra immagine nginx (In alternativa potete assegnare dei nomi ai container ed utilizzarlo come hostname, io ho usato kc-1 e kc-2)
+prendete nota del parametro **ipnet** dei container in quanto lo dovrete inserire nella configurazione del file *nginx.conf* allegata. Dopo aver sistemato la configurazione buildate la vostra immagine nginx (In alternativa potete assegnare dei nomi ai container ed utilizzarlo come hostname, io ho usato kc-1 e kc-2)
 
 ```shell
 podman build -t kc-nginx . -f nginx-dockerfile
