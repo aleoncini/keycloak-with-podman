@@ -214,7 +214,7 @@ Normalmente la porta 8080 è disabilitata, tuttavia nel momento in cui non espon
 podman run -d --rm --net kc-network -e KC_HTTP_ENABLED=true -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=change_me kc start --optimized --hostname=http://localhost:8080
 ```
 
-Ripetete di nuovo lo stesso comando per avere due istanze di Keycloak (se volete lanciatene anche di più). Controllate che i pod siano up & running 
+Ripetete di nuovo lo stesso comando (in questo caso è proprio lo stesso comando in quanto non serve nemmeno cambiare le porte esposte) per avere due istanze di Keycloak (se volete lanciatene anche di più). Controllate che i pod siano up & running 
 
 ```shell
 podman ps
