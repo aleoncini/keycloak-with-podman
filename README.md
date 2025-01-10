@@ -165,10 +165,19 @@ Con riferimento a questa [guida](https://www.keycloak.org/server/containers) la 
 
 Questo passaggio è molto importante perché ci permette di aggiungere al Keycloak base tutti i plugin, provider ed ogni qualunque altro tipo di personalizzazione di cui necessita il nostro server Keycloak, che poi un Keycloak personalizzato è il caso più frequente.
 
-Per questo esempio io ho allegato un *Dockerfile* con cui specifico alcuni dei parametri di connessione al DB e preparo dei certificati self-signed per le connessioni HTTPS. In questa fase potete aggiungere ogni tipo di personalizzazione prevista per il keycloak del vostro ambiente (es. provider SPID).
+In questa fase potete aggiungere ogni tipo di personalizzazione prevista per il keycloak del vostro ambiente (es. provider SPID).
+
+Per questo esempio io ho allegato un *Dockerfile* con cui specifico alcuni dei parametri di connessione al DB e preparo dei certificati self-signed per le connessioni HTTPS.
+
+> ***NOTA:*** La strategia qui può essere di vario tipo, per esempio specificando le variabili da riga di comando. Il compose proposto aggiunge queste informazioni
+> tramite variabili di ambiente. In questo esempio, avendo deciso di buildare l'immagine di keycloak
+> di riferimento potrebbe essere consigliabile aggiungerle in fase di build. Se decidete di fare in questo modo ***dovete togliere i commenti nel Dockerfile*** ed inserire l'indirizzo IP del DB che potete ricavare dal comando *podman network inspect kc-network*.
 
 ```shell
 cd kc
+```
+
+```shell
 podman build . -t kc
 ```
 
