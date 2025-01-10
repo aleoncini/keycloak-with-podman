@@ -95,7 +95,9 @@ Ora scarichiamo le immagini che ci servono:
 
 ```shell
 podman pull docker.io/library/postgres:latest
+```
 
+```shell
 podman pull quay.io/keycloak/keycloak:latest
 ```
 
@@ -114,7 +116,7 @@ podman volume inspect pgdata
 a questo punto possiamo eseguire il database, usate:
 
 ```shell
-podman run -d --name pgsql --net kc-network -p 5432:5432 -v pgdata:/var/lib/postresql/data -e POSTGRES_USER=dbuser -e POSTGRES_PASSWORD=change_me -e POSTGRES_DB=keycloakDB postgres
+podman run -d --name pgsql --net kc-network -p 5432:5432 -v pgdata:/var/lib/postresql/data -e POSTGRES_USER=dbuser -e POSTGRES_PASSWORD=change_me -e POSTGRES_DB=keycloak postgres
 ```
 
 > ℹ️ **_INFO_**  
@@ -135,7 +137,7 @@ Altro comando che vi tornerà utile è
 podman network inspect kc-network
 ```
 
-in cui potrete ricavare l'indirizzo IP assegnato da Podman al container che esegue PostgresQL (e che utilizzerete più avanti).
+in cui potrete ricavare l'indirizzo IP assegnato da Podman al container che esegue PostgresQL (e che dovrete usare qualora vi colleghiate alla console di amministrazione PGADMIN).
 
 ## \[Opzionale\] Download and Start pgAdmin
 
@@ -150,6 +152,12 @@ podman run -d --name pgadmin -p 8082:80 --net kc-network -e PGADMIN_DEFAULT_EMAI
 ```
 
 Potete adesso usare la web console di Postgres usando il browser ed aprendo la pagina [localhost:8082](http://localhost:8082)
+
+> ℹ️ **_INFO_**  
+> Per usare la console di amministrazione del database inserite dbuser@example.com/change_me come credenziali. Nella dashboard cliccate su new server.
+> nella form inserite un nome per la sessione poi andate al tab connection. In questo tab inserite l'indirizzo di rete che avete letto per il container pgsql come output di inspect della rete.
+> utilizzate dbuser/change_me come credenziali e cliccate su save. Dovreste a questo punto ritrovarvi nella dashboard del database postgres avviato precedentemente.
+>
 
 ## Build and Run Keycloak
 
